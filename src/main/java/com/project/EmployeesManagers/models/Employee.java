@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -33,9 +34,16 @@ public class Employee{
 	@Column(updatable=false)
 	@DateTimeFormat(pattern="MM:dd:yyyy HH:mm:ss")
 	private Date createdAt;
-	
 	@DateTimeFormat(pattern="MM:dd:yyyy HH:mm:ss")
 	private Date updatedAt;
+	
+	@OneToMany(mappedBy="maanger", fetch = FetchType.LAZY)
+	private List<Employee> employees;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="manager_id")
+	private Employee manager;
+	
 
 	@PrePersist
 	public void onCreate(){this.createdAt = new Date();}
@@ -65,11 +73,6 @@ public class Employee{
 
 	public Employee(){}
 	
-	public Employee(){
-
-		this.createdAt = new Date();
-		this.updatedAt = new Date();
-	}
 	/**
 	 * @return the firstName
 	 */
@@ -93,5 +96,29 @@ public class Employee{
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	/**
+	 * @return the employees
+	 */
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+	/**
+	 * @param employees the employees to set
+	 */
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
+	/**
+	 * @return the manager
+	 */
+	public Employee getManager() {
+		return manager;
+	}
+	/**
+	 * @param manager the manager to set
+	 */
+	public void setManager(Employee manager) {
+		this.manager = manager;
 	}
 }
